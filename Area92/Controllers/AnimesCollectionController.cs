@@ -33,7 +33,7 @@ namespace Area92.Controllers
             [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             logger.LogInformation($"Id: {ids}");
-            var animes = await animeRepository.GetAnimes(ids);
+            var animes = await animeRepository.GetAllAnime(ids);
             if (animes.Count() != ids.Count())
             {
                 return NotFound();
@@ -55,7 +55,7 @@ namespace Area92.Controllers
             await animeRepository.SaveChanges();
 
             // Get animes from db by passing IEnumerable<Guid>
-            var animesToReturn = await animeRepository.GetAnimes(entityToSave.Select(anime => anime.Id).ToList());
+            var animesToReturn = await animeRepository.GetAllAnime(entityToSave.Select(anime => anime.Id).ToList());
 
 
             var ids = string.Join(",", animesToReturn.Select(anime => anime.Id));

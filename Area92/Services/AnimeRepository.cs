@@ -9,72 +9,72 @@ namespace Area92.Services
 {
     public class AnimeRepository : IAnimeRepository
     {
-        private readonly AnimesContext animesContext;
+        private readonly AnimesContext _animeContext;
         private readonly IPropertyMappingService _propertyMappingService;
 
-        public AnimeRepository(AnimesContext animesContext, IPropertyMappingService propertyMappingService)
+        public AnimeRepository(AnimesContext animeContext, IPropertyMappingService propertyMappingService)
         {
-            this.animesContext = animesContext ?? throw new ArgumentNullException(nameof(animesContext));
+            this._animeContext = animeContext ?? throw new ArgumentNullException(nameof(animeContext));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
         public void Delete(Anime anime)
         {
-            animesContext.Remove(anime);
+            _animeContext.Remove(anime);
         }
 
         public async Task<Anime> GetAnimeById(Guid id)
         {
-            return await animesContext.Animes.FindAsync(id);
+            return await _animeContext.Animes.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Anime>> GetAnimes()
+        public async Task<IEnumerable<Anime>> GetAllAnime()
         {
-            return await animesContext.Animes.ToListAsync();
+            return await _animeContext.Animes.ToListAsync();
         }
 
-        public async Task<PagedList<Anime>> GetAnimes(AnimesResourceParameter animesResourceParameter)
+        public async Task<PagedList<Anime>> GetAllAnime(AnimesResourceParameter animeResourceParameter)
         {
-            var animes = animesContext.Animes as IQueryable<Anime>;
+            var animes = _animeContext.Animes as IQueryable<Anime>;
             // releaseYear exists but not searchQuery
-            if (animesResourceParameter.ReleaseYear != 0)
+            if (animeResourceParameter.ReleaseYear != 0)
             {
-                animes = animes.Where(anime => anime.ReleaseYear == animesResourceParameter.ReleaseYear);
+                animes = animes.Where(anime => anime.ReleaseYear == animeResourceParameter.ReleaseYear);
             }
             // searchQuery exists but not releaseYear
-            if (!string.IsNullOrWhiteSpace(animesResourceParameter.SearchQuery))
+            if (!string.IsNullOrWhiteSpace(animeResourceParameter.SearchQuery))
             {
-                var searchQuery = animesResourceParameter.SearchQuery.Trim();
+                var searchQuery = animeResourceParameter.SearchQuery.Trim();
                 animes = animes.Where(anime => anime.GenresString.Contains(searchQuery) || anime.Title.Contains(searchQuery));
             }
 
-            if (!string.IsNullOrWhiteSpace(animesResourceParameter.OrderBy))
+            if (!string.IsNullOrWhiteSpace(animeResourceParameter.OrderBy))
             {
                 var propertyMappingValues = _propertyMappingService.GetPropertyMapping<AnimeForCreation, Anime>();
-                animes = animes.ApplySort(animesResourceParameter.OrderBy, propertyMappingValues);
+                animes = animes.ApplySort(animeResourceParameter.OrderBy, propertyMappingValues);
             }
             
-            return PagedList<Anime>.create(animes, animesResourceParameter.Page, animesResourceParameter.Size);
+            return PagedList<Anime>.create(animes, animeResourceParameter.Page, animeResourceParameter.Size);
         }
 
-        public async Task<IEnumerable<Anime>> GetAnimes(IEnumerable<Guid> ids)
+        public async Task<IEnumerable<Anime>> GetAllAnime(IEnumerable<Guid> ids)
         {
-            return await animesContext.Animes.Where(a => ids.Contains(a.Id)).ToListAsync();
+            return await _animeContext.Animes.Where(a => ids.Contains(a.Id)).ToListAsync();
         }
 
         public void Save(Anime anime)
         {
-            animesContext.Add(anime);
+            _animeContext.Add(anime);
         }
 
         public async Task<bool> SaveChanges()
         {
-            return (await animesContext.SaveChangesAsync() > 0);
+            return (await _animeContext.SaveChangesAsync() > 0);
         }
 
         public void Update(Anime anime)
         {
-            animesContext.Entry(anime).State = EntityState.Modified;
+            _animeContext.Entry(anime).State = EntityState.Modified;
         }
     }
 }

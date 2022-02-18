@@ -12,7 +12,8 @@ namespace Area92.Models
         public bool IsEnded { get; set; }
         public int NumberOfSeasons { get; set; }
         public string Language { get; set; } = string.Empty;
-        public ICollection<string>? Genres { get; set; } = new List<string>();
+        public ICollection<string>? Genres{ get; set; } = new List<string>();
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
