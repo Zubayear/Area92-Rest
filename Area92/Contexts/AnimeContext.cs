@@ -1,13 +1,14 @@
 ﻿using Area92.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Area92.Context
+namespace Area92.Contexts
 {
-    public class AnimesContext : DbContext
+    public class AnimeContext : DbContext
     {
-        public DbSet<Anime>? Animes { get; set; }
+        public DbSet<Anime>? Anime { get; set; }
 
-        public AnimesContext(DbContextOptions<AnimesContext> options)
+        public AnimeContext(DbContextOptions<AnimeContext> options)
             : base(options)
         {
         }

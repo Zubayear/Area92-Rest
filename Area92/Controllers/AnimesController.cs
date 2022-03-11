@@ -5,6 +5,7 @@ using Area92.Models;
 using Area92.ResourceParameters;
 using Area92.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Anime = Area92.Entities.Anime;
@@ -15,6 +16,7 @@ namespace Area92.Controllers
     [ApiController]
     // [Route("api/v{v:apiVersion}/animes")]
     [Route("api/animes")]
+    // [Authorize]
     public class AnimesController : ControllerBase
     {
         private readonly IAnimeRepository _animeRepository;
@@ -39,6 +41,7 @@ namespace Area92.Controllers
 
         [HttpGet(Name = "GetAllAnime")]
         [AnimesResultFilterAttribute]
+        [Authorize]
         public async Task<IActionResult> GetAllAnime([FromQuery] AnimesResourceParameter animesResourceParameter)
         {
             _logger.LogInformation("Get Request for All Anime: {AnimesResourceParameter}", animesResourceParameter);
